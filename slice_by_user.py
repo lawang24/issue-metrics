@@ -34,22 +34,24 @@ def slice_pr_by_user(issues_with_metrics):
 
     columns = ["Title", "URL","Avg Time to First Response", "Avg Time to Close", "Avg Time to Answer"]
     
-    # Write second table with individual issue/pr/discussion metrics
-    # First write the header
-    file.write("|")
-    for column in columns:
-        file.write(f" {column} |")
-    file.write("\n")
-
-    # Then write the column dividers
-    file.write("|")
-    for _ in columns:
-        file.write(" --- |")
-    file.write("\n")
+    
 
     with open("issue_metrics.md", "w", encoding="utf-8") as file:
         file.write("# User-Aggregated Metrics\n\n")
 
+        # Write table with individual issue/pr/discussion metrics
+        # First write the header
+        file.write("|")
+        for column in columns:
+            file.write(f" {column} |")
+        file.write("\n")
+
+        # Then write the column dividers
+        file.write("|")
+        for _ in columns:
+            file.write(" --- |")
+        file.write("\n")
+        
         # Then write the issues/pr/discussions row by row
         for author, stats in author_stats.items():
 
