@@ -1,5 +1,5 @@
 FROM python:3.12-slim
-LABEL com.github.actions.name="issue-metrics" \
+LABEL com.github.actions.name="issue-metrics-with-users" \
     com.github.actions.description="Gather metrics on issues/prs/discussions such as time to first response, count of issues opened, closed, etc." \
     com.github.actions.icon="check-square" \
     com.github.actions.color="white" \
