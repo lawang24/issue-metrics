@@ -30,6 +30,7 @@ from typing import List, Union
 from classes import IssueWithMetrics
 from config import get_env_vars
 from slice_by_user import slice_pr_by_user
+import json
 
 
 def get_non_hidden_columns(labels) -> List[str]:
@@ -151,6 +152,8 @@ def write_to_markdown(
 
         # Then write the issues/pr/discussions row by row
         for issue in issues_with_metrics:
+            print(json.dumps(issue))
+
             # Replace the vertical bar with the HTML entity
             issue.title = issue.title.replace("|", "&#124;")
             # Replace any whitespace
