@@ -28,13 +28,13 @@ def slice_pr_by_user(issues_with_metrics):
                 }
 
         if issue.time_to_first_response:
-            author_stats[author]["total_time_to_first_response"] += issue.time_to_first_response.totalSeconds()
+            author_stats[author]["total_time_to_first_response"] += issue.time_to_first_response.total_seconds()
 
         if issue.time_to_close:
-            author_stats[author]["total_time_to_first_response"] += issue.time_to_close.totalSeconds()
+            author_stats[author]["total_time_to_first_response"] += issue.time_to_close.total_seconds()
              
         if issue.time_to_answer:
-            author_stats[author]["total_time_to_answer"] += issue.time_to_answer.totalSeconds()
+            author_stats[author]["total_time_to_answer"] += issue.time_to_answer.total_seconds()
         
         author_stats[author]["count"] += 1
             
