@@ -29,6 +29,7 @@ from typing import List, Union
 
 from classes import IssueWithMetrics
 from config import get_env_vars
+from slice_by_user import slice_pr_by_user
 
 
 def get_non_hidden_columns(labels) -> List[str]:
@@ -132,6 +133,8 @@ def write_to_markdown(
             file,
             hide_label_metrics,
         )
+
+        slice_pr_by_user(issues_with_metrics)
 
         # Write second table with individual issue/pr/discussion metrics
         # First write the header
