@@ -134,7 +134,7 @@ def write_to_markdown(
             hide_label_metrics,
         )
 
-        slice_pr_by_user(issues_with_metrics)
+        # slice_pr_by_user(issues_with_metrics)
 
         # Write second table with individual issue/pr/discussion metrics
         # First write the header
