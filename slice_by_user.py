@@ -26,23 +26,28 @@ def slice_pr_by_user(issues_with_metrics, file):
                     "total_time_to_first_response": 0,
                     "total_time_to_close": 0,
                     "total_time_to_answer": 0,
-                    "count": 0
+                    "first_response_count": 0,
+                    "close_count": 0,
+                    "answer_count": 0,
+                    "total_prs": 0
                 }
 
         if issue.time_to_first_response:
             author_stats[author]["total_time_to_first_response"] += issue.time_to_first_response.total_seconds()
+            author_stats[author]["first_response_count"]+=1
 
         if issue.time_to_close:
             author_stats[author]["total_time_to_close"] += issue.time_to_close.total_seconds()
+            author_stats[author]["close_count"]+=1
              
         if issue.time_to_answer:
             author_stats[author]["total_time_to_answer"] += issue.time_to_answer.total_seconds()
+            author_stats[author]["answer_count"]+=1
         
-        author_stats[author]["count"] += 1
+        author_stats[author]["total_prs"] += 1
             
 
-     
-    columns = ["Author","Avg Time to First Response", "Avg Time to Close", "Avg Time to Answer", "Count"]
+    columns = ["Author","Avg Time to First Response", "Avg Time to Close", "Avg Time to Answer", "Total PRs"]
 
     file.write("# User-Aggregated Metrics\n\n")
 
@@ -62,16 +67,16 @@ def slice_pr_by_user(issues_with_metrics, file):
     # Then write the issues/pr/discussions row by row
     for author, stats in author_stats.items():
 
-        average_time_to_first_response = timedelta(seconds=stats["total_time_to_first_response"] // stats["count"])
-        average_time_to_close = timedelta(seconds=stats["total_time_to_close"] // stats["count"])
-        average_time_to_answer = timedelta(stats["total_time_to_answer"] // stats["count"])
-        count = stats["count"]
+        average_time_to_first_response = timedelta(seconds=stats["total_time_to_first_response"] // stats["first_response_count"]) if stats["first_response_count"] else "None"
+        average_time_to_close = timedelta(seconds=stats["total_time_to_close"] // stats["close_count"]) if stats["total_time_to_close"] else "None"
+        average_time_to_answer = timedelta(stats["total_time_to_answer"] // stats["answer_count"]) if stats["answer_count"] else "None"   
+        total_prs = stats["total_prs"]
         
         file.write(f" {author} |")
         file.write(f" {average_time_to_first_response} |")
         file.write(f" {average_time_to_close} |")
         file.write(f" {average_time_to_answer} |")
-        file.write(f" {count} |")
+        file.write(f" {total_prs} |")
 
         file.write("\n")
         
