@@ -42,7 +42,7 @@ def slice_pr_by_user(issues_with_metrics, file):
             
 
      
-    columns = ["Title", "URL","Avg Time to First Response", "Avg Time to Close", "Avg Time to Answer"]
+    columns = ["Author","Avg Time to First Response", "Avg Time to Close", "Avg Time to Answer", "Count"]
 
     file.write("# User-Aggregated Metrics\n\n")
 
@@ -65,11 +65,15 @@ def slice_pr_by_user(issues_with_metrics, file):
         average_time_to_first_response = timedelta(seconds=stats["total_time_to_first_response"] // stats["count"])
         average_time_to_close = timedelta(seconds=stats["total_time_to_close"] // stats["count"])
         average_time_to_answer = timedelta(stats["total_time_to_answer"] // stats["count"])
+        count = stats["count"]
         
         file.write(f" {author} |")
         file.write(f" {average_time_to_first_response} |")
         file.write(f" {average_time_to_close} |")
         file.write(f" {average_time_to_answer} |")
+        file.write(f" {count} |")
+
         file.write("\n")
         
+    file.write("\n")
 

@@ -136,6 +136,8 @@ def write_to_markdown(
 
         slice_pr_by_user(issues_with_metrics, file)
 
+        file.write("# Individual Metrics\n\n")
+
         # Write second table with individual issue/pr/discussion metrics
         # First write the header
         file.write("|")
