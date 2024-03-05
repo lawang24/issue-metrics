@@ -4,7 +4,7 @@ author: 'lawang24'
 description: 'A GitHub Action to report out issue metrics with user aggreagations'
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/github/issue_metrics:v2'
+  image: 'Dockerfile'
 branding:
   icon: 'check-square'
   color: 'white'
