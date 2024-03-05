@@ -9,35 +9,37 @@ Output: None
 Writes to the markdown file all the individual PRS
 """
 
-import json
+from datetime import timedelta
 
 def slice_pr_by_user(issues_with_metrics):
 
     author_stats = {}
 
     for issue in issues_with_metrics:
-        print(json.dumps(issue))
 
         author = issue.author
-        time_to_first_response = int(issue.time_to_first_response)
-        time_to_close = int(issue.time_to_close)
-        time_to_answer = int(issue.time_to_answer)
 
-        if author in author_stats:
-            # Update total time and count for this author for each metric
-            author_stats[author]["total_time_to_first_response"] += time_to_first_response
-            author_stats[author]["total_time_to_close"] += time_to_close
-            author_stats[author]["total_time_to_answer"] += time_to_answer
-            author_stats[author]["count"] += 1
-        else:
-            # Initialize this author's stats with all necessary metrics
+        if author not in author_stats:
             author_stats[author] = {
-                "total_time_to_first_response": time_to_first_response,
-                "total_time_to_close": time_to_close,
-                "total_time_to_answer": time_to_answer,
-                "count": 1
-            }
+                    "total_time_to_first_response": 0,
+                    "total_time_to_close": 0,
+                    "total_time_to_answer": 0,
+                    "count": 0
+                }
 
+        if issue.time_to_first_response:
+            author_stats[author]["total_time_to_first_response"] += issue.time_to_first_response.totalSeconds()
+
+        if issue.time_to_close:
+            author_stats[author]["total_time_to_first_response"] += issue.time_to_close.totalSeconds()
+             
+        if issue.time_to_answer:
+            author_stats[author]["total_time_to_answer"] += issue.time_to_answer.totalSeconds()
+        
+        author_stats[author]["count"] += 1
+            
+
+     
     columns = ["Title", "URL","Avg Time to First Response", "Avg Time to Close", "Avg Time to Answer"]
 
     with open("issue_metrics.md", "w", encoding="utf-8") as file:
@@ -59,9 +61,9 @@ def slice_pr_by_user(issues_with_metrics):
         # Then write the issues/pr/discussions row by row
         for author, stats in author_stats.items():
 
-            average_time_to_first_response = stats["total_time_to_first_response"] / stats["count"]
-            average_time_to_close = stats["total_time_to_close"] / stats["count"]
-            average_time_to_answer = stats["total_time_to_answer"] / stats["count"]
+            average_time_to_first_response = timedelta(seconds=stats["total_time_to_first_response"] // stats["count"])
+            average_time_to_close = timedelta(seconds=stats["total_time_to_close"] // stats["count"])
+            average_time_to_answer = timedelta(stats["total_time_to_answer"] // stats["count"])
             
             file.write(f" {author} |")
             file.write(f" {average_time_to_first_response} |")
