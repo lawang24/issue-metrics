@@ -30,6 +30,8 @@ from typing import List, Union
 from classes import IssueWithMetrics
 from config import get_env_vars
 from slice_by_user import slice_pr_by_user
+import github3
+
 
 
 def get_non_hidden_columns(labels) -> List[str]:
@@ -80,6 +82,7 @@ def write_to_markdown(
     average_time_in_labels: Union[dict, None],
     num_issues_opened: Union[int, None],
     num_issues_closed: Union[int, None],
+    issues : Union[List[dict], List[github3.search.IssueSearchResult]],
     labels=None,
     search_query=None,
     hide_label_metrics=False,
@@ -134,7 +137,7 @@ def write_to_markdown(
             hide_label_metrics,
         )
 
-        slice_pr_by_user(issues_with_metrics, file)
+        slice_pr_by_user(issues_with_metrics, issues,file)
 
         file.write("# Individual Metrics\n\n")
 

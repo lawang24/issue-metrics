@@ -27,7 +27,7 @@ author_value =  {
 
 
 
-def slice_pr_by_user(issues_with_metrics, file):
+def slice_pr_by_user(issues_with_metrics, raw_issues, file):
 
     print("slice pr being called")
 
@@ -54,6 +54,7 @@ def slice_pr_by_user(issues_with_metrics, file):
         
         author_stats[author]["total_prs"] += 1
 
+    for issue in raw_issues:
         # counting PR comments
         if issue.issue.pull_request_urls:
             pull_request = issue.issue.pull_request()
@@ -61,53 +62,26 @@ def slice_pr_by_user(issues_with_metrics, file):
         
         if pull_request:
             review_comments = pull_request.reviews(number=50)  # type: ignore
-            
             for review_comment in review_comments:
-                if ignore_comment(
-                    issue.issue.user,
-                    review_comment.user,
-                    review_comment.submitted_at,
-                    ready_for_review_at,
-                ):
-                    continue
-                else:
+                if not ignore_comment(issue.issue.user,review_comment.user,review_comment.submitted_at,ready_for_review_at):
                     author[review_comment.user]["comments"]+=1
 
             
     columns = ["Author","Avg Time to First Response On Their PRS", "Avg Time to Close", "Total PRs", "PR Review Comments Left"]
+    header_row = "| " + " | ".join(columns) + " |\n" + "| --- " * len(columns) + "|\n"
 
     file.write("# User-Aggregated Metrics\n\n")
+    file.write(header_row)
 
-    # Write table with individual issue/pr/discussion metrics
-    # First write the header
-    file.write("|")
-    for column in columns:
-        file.write(f" {column} |")
-    file.write("\n")
-
-    # Then write the column dividers
-    file.write("|")
-    for _ in columns:
-        file.write(" --- |")
-    file.write("\n")
-    
     # Then write the issues/pr/discussions row by row
     for author, stats in author_stats.items():
 
-        average_time_to_first_response = timedelta(seconds=stats["total_time_to_first_response"] // stats["first_response_count"]) if stats["first_response_count"] else "None"
-        average_time_to_close = timedelta(seconds=stats["total_time_to_close"] // stats["close_count"]) if stats["total_time_to_close"] else "None"
-        total_prs = stats["total_prs"]
-        comments = stats["comments"]
+        avg_response = timedelta(seconds=stats["total_time_to_first_response"] // stats["first_response_count"]) if stats["first_response_count"] else "None"
+        avg_close = timedelta(seconds=stats["total_time_to_close"] // stats["close_count"]) if stats["total_time_to_close"] else "None"
         
-        file.write(f" {author} |")
-        file.write(f" {average_time_to_first_response} |")
-        file.write(f" {average_time_to_close} |")
-        file.write(f" {total_prs} |")
-        file.write(f" {comments} |")
-        file.write("\n")
+        file.write(f"| {author} | {avg_response} | {avg_close} | {stats['total_prs']} | {stats['comments']} |\n")
 
 
-    
 def ignore_comment(
     issue_user,
     comment_user,

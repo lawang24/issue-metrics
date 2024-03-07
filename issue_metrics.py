@@ -316,6 +316,7 @@ def main():
         stats_time_in_labels,
         num_issues_open,
         num_issues_closed,
+        issues,
         labels,
         search_query,
     )
