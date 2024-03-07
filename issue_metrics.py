@@ -267,13 +267,13 @@ def main():
         issues = get_discussions(token, search_query)
         if len(issues) <= 0:
             print("No discussions found")
-            write_to_markdown(None, None, None, None, None, None, None)
+            write_to_markdown(None, None, None, None, None, None, None, None)
             return
     else:
         issues = search_issues(search_query, github_connection)
         if len(issues) <= 0:
             print("No issues found")
-            write_to_markdown(None, None, None, None, None, None, None)
+            write_to_markdown(None, None, None, None, None, None, None, None)
             return
 
     # Get all the metrics
