@@ -67,7 +67,7 @@ def slice_pr_by_user(issues_with_metrics, raw_issues, file):
                     commentor =  review_comment.user.login
                     if commentor not in author_stats:
                         author_stats[commentor] = author_value.copy()
-                    author[commentor]["comments"]+=1
+                    author_stats[commentor]["comments"]+=1
 
             
     columns = ["Author","Avg Time to First Response On Their PRS", "Avg Time to Close", "Total PRs", "PR Review Comments Left"]
