@@ -64,7 +64,10 @@ def slice_pr_by_user(issues_with_metrics, raw_issues, file):
             review_comments = pull_request.reviews(number=50)  # type: ignore
             for review_comment in review_comments:
                 if not ignore_comment(issue.issue.user,review_comment.user,review_comment.submitted_at,ready_for_review_at):
-                    author[review_comment.user]["comments"]+=1
+                    commentor =  review_comment.user.login
+                    if commentor not in author_stats:
+                        author_stats[commentor] = author_value.copy()
+                    author[commentor]["comments"]+=1
 
             
     columns = ["Author","Avg Time to First Response On Their PRS", "Avg Time to Close", "Total PRs", "PR Review Comments Left"]
