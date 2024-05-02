@@ -60,8 +60,7 @@ def search_issues(
     """
     print("Searching for issues...")
     issues_iterator = github_connection.search_issues(search_query, per_page=100)
-    print(issues_iterator.ratelimit_remaining)
-    
+
     # Print the issue titles
     issues = []
     try:
@@ -72,7 +71,6 @@ def search_issues(
         print(
             "You do not have permission to view this repository; Check you API Token."
         )
-        
         sys.exit(1)
     except github3.exceptions.NotFoundError:
         print("The repository could not be found; Check the repository owner and name.")
