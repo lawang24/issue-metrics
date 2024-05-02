@@ -60,7 +60,11 @@ def search_issues(
     """
     print("Searching for issues...")
     issues_iterator = github_connection.search_issues(search_query, per_page=100)
-
+    print("rate_limiting...")
+    print(issues_iterator.ratelimit_remaining)
+    
+    
+    
     # Print the issue titles
     issues = []
     try:
