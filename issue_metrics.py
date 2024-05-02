@@ -63,14 +63,15 @@ def search_issues(
     print("rate_limiting...")
     print(issues_iterator.ratelimit_remaining)
     
-    
-    
     # Print the issue titles
     issues = []
     try:
-        for issue in issues_iterator:
+        for i,issue in enumerate(issues_iterator):
+            print("issue", i)
+            print(issues_iterator.ratelimit_remaining)
             print(issue.title)  # type: ignore
             issues.append(issue)
+            
     except github3.exceptions.ForbiddenError:
         print(
             "You do not have permission to view this repository; Check you API Token."
