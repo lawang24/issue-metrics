@@ -90,7 +90,9 @@ def search_issues(
     except github3.exceptions.UnprocessableEntity:
         print("The search query is invalid; Check the search query.")
         sys.exit(1)
-
+    
+    print("post_processing rate limit...")
+    print(issues_iterator.ratelimit_remaining)
     return issues
 
 
