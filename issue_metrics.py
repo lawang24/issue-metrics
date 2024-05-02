@@ -24,6 +24,7 @@ Functions:
 from os.path import dirname, join
 import sys
 from typing import List, Union
+from time import sleep
 
 import github3
 from dotenv import load_dotenv
@@ -58,26 +59,39 @@ def search_issues(
     Returns:
         List[github3.search.IssueSearchResult]: A list of issues that match the search query.
     """
-    print("Searching for issues...")
-    issues_iterator = github_connection.search_issues(search_query, per_page=100)
-    print("rate_limiting...")
-    print(issues_iterator.ratelimit_remaining)
     
+    REQUESTS_PER_MINUTE = 30
+    PER_PAGE = 100
+    
+    print("Searching for issues...")
+    issues_iterator = github_connection.search_issues(search_query, per_page=PER_PAGE)
+    print("rate_limiting...")
+    # requests_remaining = issues_iterator.ratelimit_remaining
+    requests_remaining = 1
+    
+    
+    while (requests_remaining == 0):
+        print("Hit API Limit, waiting 1 minute for API to refresh")
+        sleep(65)
+        requests_remaining = issues_iterator.ratelimit_remaining
+        
     # Print the issue titles
     issues = []
     try:
         for i,issue in enumerate(issues_iterator):
-            print("issue", i)
-            print(issues_iterator.ratelimit_remaining)
+            
+            # Rate Limit Handling: API only allows 30 requests per minute
+            if i%PER_PAGE==0:
+                requests_remaining-=1
+            
             print(issue.title)  # type: ignore
             issues.append(issue)
             
-        for i,issue in enumerate(issues_iterator):
-            print("issue", i)
-            print(issues_iterator.ratelimit_remaining)
-            print(issue.title)  # type: ignore
-            issues.append(issue)
-            
+            while (requests_remaining == 0):
+                print("Hit API Limit, waiting 1 minute for API to refresh")
+                sleep(65)
+                requests_remaining = issues_iterator.ratelimit_remaining
+                
     except github3.exceptions.ForbiddenError:
         print(
             "You do not have permission to view this repository; Check you API Token."
